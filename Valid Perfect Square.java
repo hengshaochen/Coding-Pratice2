@@ -6,9 +6,7 @@ class Solution {
         while (start + 1 < end) {
             long mid = start + (end - start) / 2;
             // System.out.println("mid " + mid);
-            if (mid * mid == num) {
-                end = mid;
-            } else if (mid * mid > num) {
+            if (mid * mid > num) {
                 end = mid;
             } else {
                 start = mid;
