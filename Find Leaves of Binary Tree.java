@@ -59,6 +59,8 @@ class Solution {
     }
 }
 
+
+// 空間O(1) , 但複雜度高
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
