@@ -15,6 +15,11 @@ class MyCode {
     // zCIabCI
     String b = "aaa";
     String c = "b";
+    /*
+    String a = "bbcbcaca";
+    String b = "bca";
+    String c = "b";
+    */
     
     
     System.out.println(replace(a, b, c));
