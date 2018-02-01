@@ -250,7 +250,7 @@ public class TrinaryTree {
         
         //delete a value from the tree
         public void delete(int val){
-                delete(root, val);
+                root = delete(root, val);
         }
         public Node delete(Node node, int val){
                 if (node == null){
@@ -269,7 +269,9 @@ public class TrinaryTree {
                         }
                         else if (node.right != null){
                                 node.val = getMin(node.right).val;
-                                node = delete(node.right, getMin(node.right).val);
+                                System.out.println( node.val);
+                                //node = delete(node.right, getMin(node.right).val);
+                                node.right = delete(node.right, getMin(node.right).val);
                         }
                         else{
                                 node = node.left;
@@ -308,10 +310,11 @@ public class TrinaryTree {
                 tree.insert(7);
                 tree.insert(2);
                 tree.insert(2);
+                tree.insert(99);
                 //preorder traversal, the sequence should be 5422597. 1point 3acres 璁哄潧
                 System.out.println("Preorder traversal: ");
                 tree.print();
-                tree.delete(5);
+                tree.delete(4);
                 // the sequence should be 542297
                 System.out.println("After delete 5:"); 
                 tree.print();
