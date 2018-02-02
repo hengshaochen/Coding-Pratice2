@@ -35,3 +35,41 @@ class Solution {
         return ans;
     }
 }
+
+// DFS
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        // DFS走preorder才會在level左到右
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root == null) {
+            return ans;
+        }
+        
+        dfs(root, 0, ans);
+        return ans;
+    }
+    
+    public void dfs(TreeNode root, int depth, List<List<Integer>> ans) {
+        if (root == null) {
+            return;
+        }
+        
+        if (depth == ans.size()) {
+            ans.add(new ArrayList<Integer>());
+        }
+        
+        ans.get(depth).add(root.val);
+        
+        dfs(root.left, depth + 1, ans);
+        dfs(root.right, depth + 1, ans);
+    }
+}
