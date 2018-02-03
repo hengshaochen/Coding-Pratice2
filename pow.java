@@ -52,3 +52,36 @@ class Solution {
         return ans;
     }
 }
+
+// 輸入為float, long
+    public float myPow(float x, long n) {
+        // base case
+        if (n == 1.0 || x == 0.0 || x == 1.0) {
+            return x;
+        }
+        if (n == 0.0) {
+            return 1;
+        }
+        
+        // 前處理次方為負數
+        if (n < 0) {
+            x = 1 / x;
+            n = -n;
+        }
+        
+        float ans = 1;
+        
+        // Step1: 切子問題 / 拿到子問題算好的ans
+        float sub_ans = myPow(x, n / 2);
+        
+        // Step2: 當層做的事情：把子問題 乘上 子問題, 且若當層次方數 mod 2 為1, 還要再乘以x
+        if (n % 2 == 1) {
+            ans = sub_ans * sub_ans * x;
+        } else {
+            ans = sub_ans * sub_ans;
+        }
+        
+        // Step3: 回傳給父親
+        return ans;
+    }
+    
