@@ -105,3 +105,76 @@ class Solution {
         return ans;
     }
 }
+
+// II的Follow up: 一次可以查三個以上的單詞：（用Minimum Window Substring --- Sliding Window)
+// 最後把minimum window size - 1就是答案
+// "static void main" must be defined in a public class.
+public class Main {
+    public static void main(String[] args) {
+        new Main();
+    }
+    
+    public Main() {
+        String[] input = {"pratice", "makes", "perfect", "coding", "makes", "bus"};
+        //String[] query = {"bus", "coding", "makes"};
+        String[] query = {"bus", "makes", "makes"};
+        
+        System.out.println(findShortest(input, query));
+    }
+    
+    public int findShortest(String[] input, String[] query) {
+        if (input.length == 0 || query.length == 0) {
+            return 0;
+        }
+        
+        // 先統計query的字數的數量
+        HashMap<String, Integer> q_map = new HashMap<>();
+        for (int i = 0; i < query.length; i++) {
+            if (!q_map.containsKey(query[i])) {
+                q_map.put(query[i], 1);
+            } else {
+                q_map.put(query[i], q_map.get(query[i]) + 1);
+            }
+        }
+        
+        // 設置起點終點及答案
+        int i = 0, j = 0, min_distance = Integer.MAX_VALUE;
+        
+        // 當前window的map
+        HashMap<String, Integer> cur_map = new HashMap<>();
+        
+        while (i < input.length) {
+            while (!valid(cur_map, q_map) && j < input.length) {
+                if (!cur_map.containsKey(input[j])) {
+                    cur_map.put(input[j], 1);
+                } else {
+                    cur_map.put(input[j], cur_map.get(input[j]) + 1);
+                }
+                j++;
+            }
+            
+            // 看看當前window會不會更小
+            if (valid(cur_map, q_map)) {
+                if (min_distance > j - i) {
+                    min_distance = j - i;
+                }
+            }
+            
+            // 向右移動
+            cur_map.put(input[i], cur_map.get(input[i]) - 1);
+            i++;
+        }
+        
+        return min_distance - 1;
+    }
+    
+    public boolean valid(HashMap<String, Integer> cur_map, HashMap<String, Integer> q_map) {
+        for (String q_element : q_map.keySet()) {
+            if (!cur_map.containsKey(q_element) ||
+                q_map.get(q_element) > cur_map.get(q_element)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}

@@ -54,3 +54,36 @@ public class Main {
         return start;
     }
 }
+
+
+// Cubic Root
+// "static void main" must be defined in a public class.
+public class Main {
+    public static void main(String[] args) {
+        new Main();
+    }
+    
+    public Main() {
+        
+        System.out.println(Math.cbrt(3));
+        System.out.println(myCubic(3));
+    }
+    
+    public double myCubic(int target) {
+        // 把這個問題轉成binary search, 要在1~x中找到一個數字, 該數字^2 會> x的
+        double eps = 1e-9;
+        double start = 0, end = target;
+
+        while (Math.abs(start - end) > eps) {
+            double mid = start + (end - start) / 2;
+            double cur = mid * mid * mid;
+            if (cur > target) {
+                end = mid;
+            } else {
+                start = mid;
+            }
+        }
+
+        return start;
+    }
+}

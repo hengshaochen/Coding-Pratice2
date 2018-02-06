@@ -1,4 +1,77 @@
-// 最優解遍歷一次, 但空間是O(N)
+// 最優解空間O(1), 時間O(n)
+// 思路：做後序遍歷，維護一個cur_level, 代表當前層數，
+// 關鍵在於如果當前層數==當前arraylist ans.size()就新增一層arraylist.
+// 然後加入當前node到對應的層數的arraylist即可。注意root==null要回傳-1 
+// 因為arraylist初始化的size是0.leaf node是在第0層
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public List<List<Integer>> findLeaves(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root == null) {
+            return ans;
+        }
+        
+        post_traversal(root, ans);
+        return ans;
+    }
+    
+    public int post_traversal(TreeNode root, List<List<Integer>> ans) {
+        // base case
+        if (root == null) {
+            // 要讓leaf node的level是0, 才能剛好等於arraylist.size, 才能new ArrayList<>()
+            return -1;
+        }
+        
+        // Step1: pass to child and receive from child
+        int left = post_traversal(root.left, ans);
+        int right = post_traversal(root.right, ans);
+        
+        // Step2: job of current node
+        int cur_level = Math.max(left, right) + 1;
+        // 關鍵！代表這層還沒被開闢過
+        if (cur_level == ans.size()) {
+            ans.add(new ArrayList<>());
+        }
+        ans.get(cur_level).add(root.val);
+        
+        // Step3: return value
+        return cur_level;
+    }
+
+    /*
+          1
+         / \
+        2   3
+       / \     
+      4   5   
+              arraylist.size() == 0 等於 cur_level == 0 --> ans.add(new ArrayList<>())
+              level 0: 4 5 
+              -------------
+              arraylist.size() == 1 等於 cur_level == 1 --> ans.add(new ArrayList<>())
+              level 0: 4 5 
+              level 1: 2 
+              -------------
+              arraylist.size() == 2 等於 cur_level == 2 --> ans.add(new ArrayList<>())
+              level 0: 4 5 
+              level 1: 2 
+              level 2: 1 
+              -------------
+              level 0: 4 5 3 
+              level 1: 2 
+              level 2: 1 
+    */
+}
+
+
+// 遍歷一次, 但空間是O(N)
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
