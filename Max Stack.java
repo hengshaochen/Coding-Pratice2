@@ -156,3 +156,148 @@ class MaxStack {
  * int param_4 = obj.peekMax();
  * int param_5 = obj.popMax();
  */
+
+// 法2: 用兩個Stack, popMax是O(n)，其他都是O(1)
+class MaxStack {
+
+    /** initialize your data structure here. */
+    Stack<Integer> s;
+    Stack<Integer> maxStack;
+    public MaxStack() {
+        s = new Stack<>();
+        maxStack = new Stack<>();
+    }
+    
+    public void push(int x) {
+        if (maxStack.isEmpty()) {
+            maxStack.push(x);
+        } else {
+            // 如果maxStack的頂 > x, 還是再push頂的元素，不然就push x
+            if (maxStack.peek() > x) {
+                maxStack.push(maxStack.peek());
+            } else {
+                maxStack.push(x);
+            }
+        }
+        s.push(x);
+    }
+    
+    public int pop() {
+        maxStack.pop();
+        return s.pop();
+    }
+    
+    public int top() {
+        return s.peek();
+    }
+    
+    public int peekMax() {
+        return maxStack.peek();
+    }
+    
+    public int popMax() {
+        int max_value = peekMax();
+        
+        Stack<Integer> buffer = new Stack<>();
+        while (top() != max_value) {
+            buffer.push(pop());
+        }
+        pop(); // pop掉max值
+        while (!buffer.isEmpty()) {
+            push(buffer.pop());  // 這個push是，我上面改寫過的，會維持maxStack的push
+        }
+        return max_value;
+    }
+}
+
+/**
+ * Your MaxStack object will be instantiated and called as such:
+ * MaxStack obj = new MaxStack();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.top();
+ * int param_4 = obj.peekMax();
+ * int param_5 = obj.popMax();
+ */
+
+ // 法3: 要求全部操作都要O(logn)完成, 除了peek。用Double LinkedList + TreeMap
+class MaxStack {
+    TreeMap<Integer, List<Node>> map;
+    DoubleLinkedList dll;
+
+    public MaxStack() {
+        map = new TreeMap();
+        dll = new DoubleLinkedList();
+    }
+
+    public void push(int x) {
+        Node node = dll.add(x);
+        if(!map.containsKey(x))
+            map.put(x, new ArrayList<Node>());
+        map.get(x).add(node);
+    }
+
+    public int pop() {
+        int val = dll.pop();
+        List<Node> L = map.get(val);
+        L.remove(L.size() - 1);
+        if (L.isEmpty()) map.remove(val);
+        return val;
+    }
+
+    public int top() {
+        return dll.peek();
+    }
+
+    public int peekMax() {
+        return map.lastKey();
+    }
+
+    public int popMax() {
+        int max = peekMax();
+        List<Node> L = map.get(max);
+        Node node = L.remove(L.size() - 1);
+        dll.unlink(node);
+        if (L.isEmpty()) map.remove(max);
+        return max;
+    }
+}
+
+class DoubleLinkedList {
+    Node head, tail;
+
+    public DoubleLinkedList() {
+        head = new Node(0);
+        tail = new Node(0);
+        head.next = tail;
+        tail.prev = head;
+    }
+
+    public Node add(int val) {
+        Node x = new Node(val);
+        x.next = tail;
+        x.prev = tail.prev;
+        tail.prev = tail.prev.next = x; // tail.pre, tail.pre.next 兩個一次assign成x
+        return x;
+    }
+
+    public int pop() {
+        return unlink(tail.prev).val;
+    }
+
+    public int peek() {
+        return tail.prev.val;
+    }
+
+    public Node unlink(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+        return node;
+    }
+}
+
+class Node {
+    int val;
+    Node prev, next;
+    public Node(int v) {val = v;}
+}
