@@ -1,53 +1,68 @@
 // "static void main" must be defined in a public class.
 public class Main {
-    class ListNode {
-        int val;
-        ListNode next;
-        public ListNode(int val) {
-            this.val = val;
-        }
-    }
-    
     public static void main(String[] args) {
         new Main();
     }
     
     public Main() {
-        List<Integer> list1 = new LinkedList<>();
-        List<Integer> list2 = new LinkedList<>();
+        List<List<Integer>> lists = new LinkedList<>();
+        List<Integer> cur = new LinkedList<>();
+        cur.add(1);
+        cur.add(3);
+        cur.add(4);
+        cur.add(6);
         
-        list1.add(2);
-        list1.add(2);
-        list1.add(2);
-        list1.add(5);
-        list1.add(7);
-        list1.add(9);
+        List<Integer> cur2 = new ArrayList<>();
+        cur2.add(1);
+        cur2.add(2);
+        cur2.add(3);
+        cur2.add(4);
         
-        list2.add(2);
-        list2.add(2);
-        list2.add(3);
-        list2.add(3);
-        list2.add(5);
-        list2.add(7);
-        // System.out.println(intersection_iterator(list1, list2));
-        System.out.println(union_iterator(list1, list2));
+        List<Integer> cur3 = new ArrayList<>();
+        cur3.add(2);
+        cur3.add(3);
+        cur3.add(4);
+        cur3.add(8);
         
         
+        List<Integer> cur4 = new ArrayList<>();
+        cur4.add(1);
+        cur4.add(3);
+        cur4.add(4);
+        
+        lists.add(cur);
+        lists.add(cur2);
+        lists.add(cur3);
+        lists.add(cur4);
+        
+        System.out.println(intersectionK(lists, 0, lists.size() - 1));
+    }
+    
+    public List<Integer> intersectionK(List<List<Integer>> lists, int start, int end) {
+        if (start == end) {
+            return lists.get(start);
+        }
+        
+        int mid = start + (end - start) / 2;
+        List<Integer> left = intersectionK(lists, start, mid);
+        List<Integer> right = intersectionK(lists, mid + 1, end);
+        return intersection_iterator(left, right);
+        // return union_iterator(left, right);
     }
     
     public List<Integer> intersection_iterator(List<Integer> list1, List<Integer> list2) {
         ListIterator iter1 = list1.listIterator();
         ListIterator iter2 = list2.listIterator();
-        
+
         List<Integer> ans = new LinkedList<>();
-        
+
         while (iter1.hasNext() && iter2.hasNext()) {
             int next1 = (int)iter1.next();
             int next2 = (int)iter2.next();
             //System.out.println("next:" + next1 + " " + next2);
             if (next1 == next2) {
                 ans.add(next1);
-                
+
                 /*
                 // 去重 若要變成[2,5,7]而不是[2,2,5,7]
                 while (iter1.hasNext()) {
@@ -65,7 +80,7 @@ public class Main {
                     }
                 }
                 */
-                
+
             } else if (next1 < next2) {
                 iter2.previous();
             } else {
@@ -74,26 +89,23 @@ public class Main {
         }
         return ans;
     }
+
     
-/*
-int arr1[] = {2, 2, 2, 5, 7, 9};
-int arr2[] = {2, 2, 3, 3, 5, 7};
-ans: 2,2,2,3,3,5,7,9
-*/
+    
     public List<Integer> union_iterator(List<Integer> list1, List<Integer> list2) {
         ListIterator iter1 = list1.listIterator();
         ListIterator iter2 = list2.listIterator();
-        
+
         List<Integer> ans = new LinkedList<>();
-        
+
         while (iter1.hasNext() && iter2.hasNext()) {
             int next1 = (int)iter1.next();
             int next2 = (int)iter2.next();
             System.out.println("next:" + next1 + " " + next2);
             if (next1 == next2) {
                 ans.add(next1);
-                
-                
+
+
             } else if (next1 < next2) {
                 ans.add(next1);
                 iter2.previous();
@@ -119,14 +131,15 @@ ans: 2,2,2,3,3,5,7,9
                 }
             */
         }
-        
+
         while (iter1.hasNext()) {
             ans.add((int)iter1.next());
         }
         while (iter2.hasNext()) {
             ans.add((int)iter2.next());
         }
-        
+
         return ans;
     }
+    
 }
